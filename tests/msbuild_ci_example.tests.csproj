@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="UnitTestsTeamCity" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="UnitTests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MSBuildCommunityTasksPath>$(SolutionDir)\.build</MSBuildCommunityTasksPath>
@@ -24,10 +24,7 @@
     <CreateItem Include="$(OutDir)*.Tests.dll">
       <Output TaskParameter="Include" ItemName="TestAssembly" />
     </CreateItem>
-    <NUnitTeamCity Assemblies="@(TestAssembly)"
-        ToolPath="C:\Program Files (x86)\NUnit 2.6.3\bin"
-        OutputXmlFile="$(NUnitResultsFile)" 
-    />
+    <NUnitTeamCity Assemblies="@(TestAssembly)" />
   </Target>
   
   
