@@ -24,7 +24,7 @@
     <CreateItem Include="$(OutDir)*.Tests.dll">
       <Output TaskParameter="Include" ItemName="TestAssembly" />
     </CreateItem>
-    <NUnitTeamCity Assemblies="@(TestAssembly)" />
+    <NUnitTeamCity Assemblies="@(TestAssembly)" NUnitVersion="NUnit-2.6.2" />
   </Target>
   
   <PropertyGroup>
