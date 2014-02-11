@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="UnitTestsTeamCity" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="UnitTests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MSBuildCommunityTasksPath>$(SolutionDir)\.build</MSBuildCommunityTasksPath>
     <NUnitResultsFile>nunit-results.xml</NUnitResultsFile>
   </PropertyGroup>
 
-  <UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"  Condition="'$(teamcity_dotnet_nunitlauncher_msbuild_task)' != ''"/>
+  <UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"  Condition="'$(TEAMCITY_VERSION)' != ''"/>
 
   <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
 
-  <Target Name="UnitTests" DependsOnTargets="Clean;Build">
+  <Target Name="UnitTestsLocal" DependsOnTargets="Clean;Build">
     <CreateItem Include="$(OutDir)*.Tests.dll">
       <Output TaskParameter="Include" ItemName="TestAssembly" />
     </CreateItem>
@@ -25,6 +25,11 @@
       <Output TaskParameter="Include" ItemName="TestAssembly" />
     </CreateItem>
     <NUnitTeamCity Assemblies="@(TestAssembly)" NUnitVersion="NUnit-2.6.2" />
+  </Target>
+  
+  <Target Name="UnitTests">
+    <CallTarget Targets="UnitTestsTeamCity" Condition="'$(TEAMCITY_VERSION)' != ''"/>
+    <CallTarget Targets="UnitTestsLocal" Condition="'$(TEAMCITY_VERSION)' == ''"/>
   </Target>
   
   <PropertyGroup>
