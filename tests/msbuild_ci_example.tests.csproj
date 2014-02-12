@@ -1,12 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="UnitTests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Coverage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MSBuildCommunityTasksPath>$(SolutionDir)\.build</MSBuildCommunityTasksPath>
     <NUnitResultsFile>nunit-results.xml</NUnitResultsFile>
+    <NUnit-ToolPath>..\packages\NUnit.Runners.2.6.3\tools\</NUnit-ToolPath>
+    <OpenCover-ToolPath>..\packages\OpenCover.4.5.2316\</OpenCover-ToolPath>
+    <ReportGenerator-ToolPath>..\packages\ReportGenerator.1.9.1.0\</ReportGenerator-ToolPath>
   </PropertyGroup>
 
   <UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"  Condition="'$(TEAMCITY_VERSION)' != ''"/>
+  
+  <UsingTask TaskName="ReportGenerator" AssemblyFile="$(ReportGenerator-ToolPath)ReportGenerator.exe" />
+  <ItemGroup>
+    <CoverageFiles Include="coverage.xml" />
+    <SourceDirectories Include="..\src" />
+  </ItemGroup>
 
   <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
 
@@ -30,6 +39,11 @@
   <Target Name="UnitTests">
     <CallTarget Targets="UnitTestsTeamCity" Condition="'$(TEAMCITY_VERSION)' != ''"/>
     <CallTarget Targets="UnitTestsLocal" Condition="'$(TEAMCITY_VERSION)' == ''"/>
+  </Target>
+  
+  <Target Name="Coverage" DependsOnTargets="Clean;Build">
+    <Exec Command='$(OpenCover-ToolPath)OpenCover.Console.exe -register:user -target:$(NUnit-ToolPath)nunit-console-x86.exe -targetargs:"$(OutDir)msbuild_ci_example.tests.dll /noshadow" -output:coverage.xml'/>
+     <ReportGenerator ReportFiles="@(CoverageFiles)" TargetDirectory="report" ReportTypes="Html" SourceDirectories="@(SourceDirectories)" VerbosityLevel="Verbose" />
   </Target>
   
   <PropertyGroup>
