@@ -21,6 +21,7 @@ def gituserName
    }
    stage ('Build') {
       sh"msbuild Build.proj"
+   }
    stage ('Docker Image Build') {
        
    }
