@@ -1,11 +1,12 @@
-node {
-def app
+node 
+{
 def commit_username
 def commit_email
 def gituserName
-   
-   stage('Checkout') {
-	withFolderProperties{ 
+stage('Checkout')
+	{
+	withFolderProperties
+		{ 
 	 git branch: env.gitBranch, url: "https://github.com/paulsoumi96/msbuild_ci_example.git"
 	 props = readProperties  file: """jenkinsJob.properties"""
          workspace = pwd ()
@@ -17,15 +18,16 @@ def gituserName
 	 gituserName=sh(returnStdout: true, script: """echo \$(dirname ${env.gitUrl.trim()})""").trim();
 	 gituserName=sh(returnStdout: true, script: """echo \$(basename ${gituserName.trim()})""").trim();
 			sh"""echo ${gituserName}""" 
+   		}
    	}
-   }
-   stage ('Build') {
+stage ('Build') 
+	{
       sh"msbuild Build.proj"
-   }
-   stage ('Docker Image Build') {
-       
-   }
-   stage('Run Container') {
-      
-   }
+   	}
+stage ('Docker Image Build') 
+	{
+       	}
+stage('Run Container') 
+	{
+   	}
 }
