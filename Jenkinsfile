@@ -6,7 +6,7 @@ def gituserName
    
    stage('Checkout') {
 	withFolderProperties{ 
-	 git branch: env.gitBranch, url: https://github.com/paulsoumi96/msbuild_ci_example.git
+	 git branch: env.gitBranch, url: "https://github.com/paulsoumi96/msbuild_ci_example.git"
 	 props = readProperties  file: """jenkinsJob.properties"""
          workspace = pwd ()
 	 commit_username=sh(returnStdout: true, script: '''username=$(git log -1 --pretty=%an) 
