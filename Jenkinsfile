@@ -20,7 +20,7 @@ def gituserName
    	}
    }
    stage ('Build') {
-      
+      msbuild Build.proj -t:Build
    }
    stage ('Docker Image Build') {
        
